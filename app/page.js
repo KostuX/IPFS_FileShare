@@ -5,7 +5,8 @@ import DefaultLayout from "../layout/default";
 import { InputComponent } from "@/reusable/components/inputCID";
 import ErrorMessage from "@/reusable/components/errorMessage";
 import InfoWindow from "@/reusable/components/infoWindow";
-import { ws_connection } from "@/reusable/variables/connection";
+import updateInfo from "@/helper/updateInfo";
+
 import {
   PAGE_STATUS_NORMAL,
   PAGE_STATUS_ERROR,
@@ -25,12 +26,17 @@ export default function Home() {
   const [info, setInfo] = useState([
     {
       title: "start",
-      data: { data: "Just Started" },
+      data: "Just Started",
       time: new Date().toUTCString(),
     },
   ]);
 
+  function addInfoData(newInfoData, info = info, setInfo = setInfo) {
+    updateInfo(newInfoData, info, setInfo);
+  }
+
   useEffect(() => {
+    addInfoData({ title: "tit", data: "data" });
     if (!errorMessage.ok) {
       setPageStatus(PAGE_STATUS_ERROR);
     } else {
@@ -40,17 +46,8 @@ export default function Home() {
 
   useEffect(() => {
     if (socketAddress?.port > 0) {
-      setInfo([
-        ...info,
-        {
-          title: "socket open on",
-          data: socketAddress,
-          time: new Date().toUTCString(),
-        },
-      ]);
-
       openWebSocket(
-        `ws://${ws_connection.address}:${ws_connection.port}`,
+        `ws://${socketAddress.address}:${socketAddress.port}`,
         (socket) => {
           socket.send(JSON.stringify({ data: "hello from client" }));
         },
@@ -85,6 +82,7 @@ export default function Home() {
               setErrorMessage,
               input,
               setSocketAddress,
+              setInfo,
             }}
           >
             Submit

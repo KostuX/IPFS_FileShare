@@ -8,6 +8,7 @@ export default function InfoWindow({ prop }) {
 
   useEffect(() => {
     setInfo(prop.info);
+    console.log(prop.info);
   }, [prop.info]);
 
   return (
