@@ -1,6 +1,13 @@
-export default function openWebSocket(url, onOpen, onMessage, onError) {
-  const socket = new WebSocket(url);
+export default function openWebSocket(address, onOpen, onMessage, onError) {
+  const url = `ws://${address.address}:${address.port}`;
+  let socket = null;
 
+  try {
+    socket = new WebSocket(url);
+  } catch (e) {
+    console.error("cannot open socket", e);
+  }
+  /*
   socket.onopen = () => {
     console.log("WebSocket connection established");
     if (onOpen) {
@@ -25,6 +32,6 @@ export default function openWebSocket(url, onOpen, onMessage, onError) {
   socket.onclose = () => {
     console.log("WebSocket connection closed");
   };
-
+*/
   return socket;
 }

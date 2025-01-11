@@ -1,7 +1,7 @@
-export default function updateInfo({ info, setInfo, newInfo }) {
+export default function updateInfo(newInfoData, info, setInfo) {
   let addInfo = {
-    data: newInfo.data,
-    title: newInfo.title,
+    data: newInfoData.data,
+    title: newInfoData.title,
     time: new Date().toUTCString(),
   };
 

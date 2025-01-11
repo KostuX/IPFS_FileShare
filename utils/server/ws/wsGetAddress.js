@@ -1,5 +1,5 @@
 import { api_getWsAddress } from "@/reusable/variables/apiRoutes";
-export default async function getWsAddress({ setErrorMessage }) {
+export default async function wsGetAddress({ setErrorMessage }) {
   let options = {
     method: "POST",
     headers: {

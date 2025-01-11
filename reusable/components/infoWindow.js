@@ -8,7 +8,6 @@ export default function InfoWindow({ prop }) {
 
   useEffect(() => {
     setInfo(prop.info);
-    console.log(prop.info);
   }, [prop.info]);
 
   return (
@@ -17,11 +16,14 @@ export default function InfoWindow({ prop }) {
         Debug
         <div className="text-white">
           <div>
-            {info.map((inf, index) => (
-              <div key={index}>
-                [{inf.time}] {inf.title} {displayObject(inf.data)}
-              </div>
-            ))}
+            {info
+              .slice(-10)
+              .toReversed()
+              .map((inf, index) => (
+                <div key={index}>
+                  [{inf?.time}] {inf?.title} {displayObject(inf?.data)}
+                </div>
+              ))}
           </div>
         </div>
       </div>

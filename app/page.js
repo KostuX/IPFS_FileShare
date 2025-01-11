@@ -14,7 +14,7 @@ import {
   PAGE_STATUS_CANCEL,
 } from "@/reusable/variables/component";
 import SubmitButton from "@/reusable/components/submitButton";
-import openWebSocket from "@/utils/client/openWebSocket";
+import openWebSocket from "@/utils/server/ws/wsOpen";
 
 export default function Home() {
   const [input, setInput] = useState();
@@ -25,41 +25,18 @@ export default function Home() {
   const [socket, setSocket] = useState(null);
   const [info, setInfo] = useState([
     {
-      title: "start",
+      title: "init",
       data: "Just Started",
       time: new Date().toUTCString(),
     },
   ]);
 
-  function addInfoData(newInfoData, info = info, setInfo = setInfo) {
+  function addInfoData(newInfoData) {
+    if (typeof newInfoData === "string") {
+      newInfoData = { data: newInfoData };
+    }
     updateInfo(newInfoData, info, setInfo);
   }
-
-  useEffect(() => {
-    addInfoData({ title: "tit", data: "data" });
-    if (!errorMessage.ok) {
-      setPageStatus(PAGE_STATUS_ERROR);
-    } else {
-      setPageStatus(PAGE_STATUS_NORMAL);
-    }
-  }, [errorMessage]);
-
-  useEffect(() => {
-    if (socketAddress?.port > 0) {
-      openWebSocket(
-        `ws://${socketAddress.address}:${socketAddress.port}`,
-        (socket) => {
-          socket.send(JSON.stringify({ data: "hello from client" }));
-        },
-        (data) => {
-          console.log(data);
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    }
-  }, [socketAddress]);
 
   return (
     <DefaultLayout>
@@ -82,7 +59,9 @@ export default function Home() {
               setErrorMessage,
               input,
               setSocketAddress,
-              setInfo,
+              addInfoData,
+              setSocket,
+              socket,
             }}
           >
             Submit
