@@ -1,4 +1,4 @@
-export default function openWebSocket(address, onOpen, onMessage, onError) {
+export default async function openWebSocket(address) {
   const url = `ws://${address.address}:${address.port}`;
   let socket = null;
 
@@ -8,30 +8,24 @@ export default function openWebSocket(address, onOpen, onMessage, onError) {
     console.error("cannot open socket", e);
   }
   /*
-  socket.onopen = () => {
-    console.log("WebSocket connection established");
-    if (onOpen) {
-      onOpen(socket);
-    }
-  };
-
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
     if (onMessage) {
-      onMessage(data);
+      console.log;
     }
   };
 
-  socket.onerror = (error) => {
-    console.error("WebSocket error:", error);
-    if (onError) {
-      onError(error);
-    }
-  };
 
+  
+*/
   socket.onclose = () => {
     console.log("WebSocket connection closed");
   };
-*/
+  socket.onopen = () => {
+    console.log("WebSocket connection established");
+  };
+  socket.onerror = (error) => {
+    console.error("WebSocket error:", error);
+  };
   return socket;
 }

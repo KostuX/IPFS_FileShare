@@ -1,6 +1,7 @@
 import wsGetAddress from "./ws/wsGetAddress";
 import openWebSocket from "./ws/wsOpen";
 import wsSend from "./ws/wsSend";
+
 export default async function resolveCID({
   input,
   setErrorMessage,
@@ -10,22 +11,30 @@ export default async function resolveCID({
   const reqAddress = await wsGetAddress({ setErrorMessage });
   let wsAddress = {};
 
-  if (!reqAddress.ok) {
-    setErrorMessage("cannot get address");
+  if (reqAddress.ok !== true) {
+    setErrorMessage("Cannot get address of the server");
+
     return;
   }
+
   wsAddress = reqAddress.data;
-  addInfoData({ title: "(API) WS Address Resolved", data: wsAddress });
 
-  let socket = openWebSocket(wsAddress);
-  setSocket(socket);
+  let socket = await openWebSocket(wsAddress);
 
-  socket.onopen = () => {
-    addInfoData("WebSocket connection established");
+  let request = {
+    type: "GET_CID_INFO",
+    data: input,
   };
-  // addInfoData("WebSocket connection established");
-  //wsSend(socket, JSON.stringify({ test: "test" }));
-  // console.log(socket);
 
-  // socket.send(JSON.stringify({ data: "connect test " }));
+  wsSend(socket, request);
+
+  socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.type === "INFO") {
+      addInfoData(data);
+    }
+    console.log(data);
+  };
+
+  // socket.close();
 }

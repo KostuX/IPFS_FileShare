@@ -31,7 +31,7 @@ export default function Home() {
     },
   ]);
 
-  function addInfoData(newInfoData) {
+  async function addInfoData(newInfoData) {
     if (typeof newInfoData === "string") {
       newInfoData = { data: newInfoData };
     }
