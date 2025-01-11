@@ -1,7 +1,6 @@
 var validator = require("validator");
 var xss = require("xss");
 import { CID } from "multiformats/cid";
-import { base64 } from "multiformats/bases/base64";
 
 export default class myValidator {
   cid(input) {
@@ -9,13 +8,16 @@ export default class myValidator {
     input = this.clean(input);
     input = this.black_escape(input);
 
-    let e = this.text(input, 5, 100, "CID", true).err;
+    let e = this.text(input, 40, 60, "CID", true).err;
     err = err.concat(e);
+
+    // stop verification if input to short or to long
+    if (e.length > 0) return { ok: err.length == 0, err };
     try {
       const parsedCID = CID.parse(input);
-      console.log(parsedCID);
+
       if (![0, 1].includes(parsedCID.version)) {
-        throw new Error(`Invalid CID version ${parsedCID.version}`);
+        err.push(`Invalid CID version ${parsedCID.version}`);
       }
     } catch (error) {
       err.push("Invalid CID");
