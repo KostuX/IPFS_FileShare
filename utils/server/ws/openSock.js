@@ -7,11 +7,12 @@ export default async function openWS() {
     return wss;
   } else {
     wss = new WebSocket.Server({ port: ws_connection.port });
-    let ws = { ws: wss };
+
     wss.on("connection", (ws) => {
       ws.on("message", (message) => {
-        const { type, data } = JSON.parse(message);
-        console.log(type, data);
+        const { data } = JSON.parse(message);
+        console.log(data);
+        ws.send(JSON.stringify({ data: "hello from server" }));
       });
 
       ws.on("close", () => {
