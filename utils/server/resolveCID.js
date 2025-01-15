@@ -5,19 +5,19 @@ import wsSend from "./ws/wsSend";
 export default async function resolveCID({
   input,
   setErrorMessage,
-  addInfoData,
-  setSocket,
+  addInfoData, 
 }) {
-  const reqAddress = await wsGetAddress({ setErrorMessage });
+  const {address, error} = await wsGetAddress();
   let wsAddress = {};
 
-  if (reqAddress.ok !== true) {
-    setErrorMessage("Cannot get address of the server");
+ console.log(error)
 
+  if (!error.ok ) {
+    setErrorMessage("Cannot get address of the server");
     return;
   }
 
-  wsAddress = reqAddress.data;
+  wsAddress = address
 
   let socket = await openWebSocket(wsAddress);
 

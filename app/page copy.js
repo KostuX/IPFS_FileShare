@@ -15,10 +15,23 @@ import {
 } from "@/reusable/variables/component";
 import SubmitButton from "@/reusable/components/submitButton";
 import openWebSocket from "@/utils/server/ws/wsOpen";
-import { IndexProvider } from "@/context/index/indexContext";
+import IndexProvider from "@/context/index/indexContext";
 
 export default function Home() {
-
+  const [input, setInput] = useState();
+  const [errorMessage, setErrorMessage] = useState({ ok: true, err: [] });
+  const [pageStatus, setPageStatus] = useState(PAGE_STATUS_NORMAL);
+  const [webSocket, setWebSocket] = useState(null);
+  const [socketAddress, setSocketAddress] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [info, setInfo] = useState([
+    {
+      title: "init",
+      data: "Just Started",
+      time: new Date().toUTCString(),
+    },
+  ]);
+  const IndexContext = createContext()
 
 
 
@@ -31,7 +44,7 @@ export default function Home() {
 
   return (
     <DefaultLayout>
-      <IndexProvider>
+      <IndexContext>
         <div className="">
           <div className=" justify-center w-screen grid">
             <Logo size={200} />
@@ -39,20 +52,33 @@ export default function Home() {
           </div>
 
           <div className="justify-center w-screen grid">
-            <InputComponent     />
+            <InputComponent
+              prop={{ setInput, setErrorMessage, setSocketAddress , IndexContext}}
+            />
           </div>
           <div className="justify-center w-screen grid mt-4">
-            <SubmitButton >
+            <SubmitButton
+              prop={{
+                pageStatus,
+                setPageStatus,
+                setErrorMessage,
+                input,
+                setSocketAddress,
+                addInfoData,
+                setSocket,
+                socket,
+              }}
+            >
               Submit
             </SubmitButton>
           </div>
           <div className="mt-4 w-1/2">
-            <ErrorMessage />
+            <ErrorMessage prop={{ errorMessage }} />
           </div>
 
-          <InfoWindow  />
+          <InfoWindow prop={{ info }} />
         </div>
-      </IndexProvider>
+      </IndexContext>
     </DefaultLayout>
   );
 }

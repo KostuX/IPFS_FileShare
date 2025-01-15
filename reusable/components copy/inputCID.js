@@ -1,18 +1,20 @@
+"use client";
 import { Input } from "@nextui-org/react";
 import myValidator from "@/helper/myValidator";
-
-import { getContext } from "@/context/index/indexContext";
+import { useState, createContext, useContext } from "react";
 
 export const InputComponent = ({ prop }) => {
   const validator = new myValidator();
-  const {setInput, setErrorMessage} = getContext()
+
+  let onInputChange = prop.setInput;
+  let onError = prop.setErrorMessage;
 
 
   const handleInputChange = (e) => {
     const cleanInput = validator.clean(e.target.value);
-    setInput(cleanInput);
+    onInputChange(cleanInput);
     const validation = validator.cid(cleanInput);
-    setErrorMessage(validation);
+    onError(validation);
   };
 
   return (
@@ -25,7 +27,7 @@ export const InputComponent = ({ prop }) => {
           className="w-3/4 max-w-2xl"
           size="lg"
         />
-      </div>      
+      </div>
     </div>
   );
 };
