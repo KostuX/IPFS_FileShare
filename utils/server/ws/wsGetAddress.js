@@ -1,5 +1,7 @@
 import { api_getWsAddress } from "@/reusable/variables/apiRoutes";
-export default async function wsGetAddress({ setErrorMessage }) {
+export default async function wsGetAddress() {
+  let error = { ok: true, err: [] }
+  let data = {}
   let options = {
     method: "POST",
     headers: {
@@ -12,23 +14,22 @@ export default async function wsGetAddress({ setErrorMessage }) {
     let data;
     try {
       data = await response.json();
-    } catch (error) {
-      data = { message: "Invalid JSON response" };
+    } catch (e) {
+
+      error = { ok: false, err: ["Invalid JSON response"] }
+
     }
 
     if (data.ok) {
-      setErrorMessage({ ok: true, err: [] });
-      return data;
+      return { address:data.data, error:error}
+
     } else {
-      setErrorMessage({
-        ok: false,
-        err: [data.message || "Submission failed"],
-      });
+      error = { ok: false, err: ["Submission failed"] }
+
     }
   } catch (error) {
-    setErrorMessage({
-      ok: false,
-      err: [error.message || "An error occurred"],
-    });
+    error = { ok: false, err: ["An error occurred"] }
   }
+
+  return { data, error }
 }

@@ -1,35 +1,20 @@
+"use client";
 import { Input } from "@nextui-org/react";
 import myValidator from "@/helper/myValidator";
-import React, { useContext } from "react";
-import { IndexContext } from "@/app/page";
-
-import { getContext } from "@/context/index/indexContext";
+import { useState, createContext, useContext } from "react";
 
 export const InputComponent = ({ prop }) => {
   const validator = new myValidator();
 
-  const {
-    input,
-    setInput,
-    errorMessage,
-    setErrorMessage,
-    pageStatus,
-    setPageStatus,
-    webSocket,
-    setWebSocket,
-    socketAddress,
-    setSocketAddress,
-    socket,
-    setSocket,
-    info,
-    setInfo,
-  } = useContext(IndexContext);
+  let onInputChange = prop.setInput;
+  let onError = prop.setErrorMessage;
+
 
   const handleInputChange = (e) => {
     const cleanInput = validator.clean(e.target.value);
-    setInput(cleanInput);
+    onInputChange(cleanInput);
     const validation = validator.cid(cleanInput);
-    setErrorMessage(validation);
+    onError(validation);
   };
 
   return (

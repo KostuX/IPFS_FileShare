@@ -6,22 +6,22 @@ import nookies from "nookies";
 export default async function resolveCID({
   input,
   setErrorMessage,
-  addInfoData,
-  setSocket,
+  addInfoData, 
 }) {
-  const reqAddress = await wsGetAddress({ setErrorMessage });
+  const {address, error} = await wsGetAddress();
   let wsAddress = {};
   setErrorMessage("Cannot get address of the server");
   // Check session
   const user = nookies.get(null).user;
 
-  if (reqAddress.ok !== true) {
-    setErrorMessage("Cannot get address of the server");
+ console.log(error)
 
+  if (!error.ok ) {
+    setErrorMessage("Cannot get address of the server");
     return;
   }
 
-  wsAddress = reqAddress.data;
+  wsAddress = address
 
   let socket = await openWebSocket(wsAddress);
 

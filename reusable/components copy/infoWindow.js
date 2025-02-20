@@ -1,10 +1,15 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import displayObject from "@/helper/displayObject";
-import { getContext } from "@/context/index/indexContext";
 
-export default function InfoWindow(){
+export default function InfoWindow({ prop }) {
+  const [info, setInfo] = useState([]);
 
-  const {info}= getContext()
- 
+  useEffect(() => {
+    setInfo(prop.info);
+  }, [prop.info]);
+
   return (
     <div className="justify-center flex">
       <div className="mt-48 text-center border text-red-500 w-5/6">
@@ -16,8 +21,8 @@ export default function InfoWindow(){
               .toReversed()
               .map((inf, index) => (
                 <div key={index}>
-                  [{inf?.time}] {inf?.title} {displayObject(inf?.data)}               
-                </div>                
+                  [{inf?.time}] {inf?.title} {displayObject(inf?.data)}
+                </div>
               ))}
           </div>
         </div>
