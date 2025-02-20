@@ -9,7 +9,6 @@ export default async function wsGetAddress({ setErrorMessage }) {
   };
   try {
     const response = await fetch(api_getWsAddress, options);
-
     let data;
     try {
       data = await response.json();
