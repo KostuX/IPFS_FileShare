@@ -1,4 +1,4 @@
-export default async function openWebSocket(address) {
+export default async function openWebSocket({ address }) {
   const url = `ws://${address.address}:${address.port}`;
   let socket = null;
 
@@ -7,17 +7,7 @@ export default async function openWebSocket(address) {
   } catch (e) {
     console.error("cannot open socket", e);
   }
-  /*
-  socket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    if (onMessage) {
-      console.log;
-    }
-  };
 
-
-  
-*/
   socket.onclose = () => {
     console.log("WebSocket connection closed");
   };

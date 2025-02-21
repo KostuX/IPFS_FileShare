@@ -7,6 +7,7 @@ import { getContext } from "@/context/index/indexContext";
 
 export const InputComponent = ({ prop }) => {
   const validator = new myValidator();
+<<<<<<< HEAD
 
   const {
     input,
@@ -24,6 +25,9 @@ export const InputComponent = ({ prop }) => {
     info,
     setInfo,
   } = useContext(IndexContext);
+=======
+  const { setInput, setErrorMessage } = getContext();
+>>>>>>> e4d73d4 (connection to ws)
 
   const handleInputChange = (e) => {
     const cleanInput = validator.clean(e.target.value);
