@@ -7,6 +7,7 @@ import ErrorMessage from "@/reusable/components/errorMessage";
 import InfoWindow from "@/reusable/components/infoWindow";
 import updateInfo from "@/helper/updateInfo";
 import FileInfoDownload from "@/reusable/components/fileInfo_download";
+import { IndexProvider } from "@/context/index/indexContext";
 
 import nookies from "nookies";
 
@@ -33,24 +34,7 @@ export default function Home() {
     console.log(sessionCookie);
   }, []);
   return (
-    <IndexContext.Provider
-      value={{
-        input,
-        setInput,
-        errorMessage,
-        setErrorMessage,
-        pageStatus,
-        setPageStatus,
-        webSocket,
-        setWebSocket,
-        socketAddress,
-        setSocketAddress,
-        socket,
-        setSocket,
-        info,
-        setInfo,
-      }}
-    >
+    <IndexProvider>
       <DefaultLayout>
         <div className="">
           <div className=" justify-center w-screen grid">
@@ -74,6 +58,6 @@ export default function Home() {
           <InfoWindow />
         </div>
       </DefaultLayout>
-    </IndexContext.Provider>
+    </IndexProvider>
   );
 }
