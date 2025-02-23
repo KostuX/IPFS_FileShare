@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { getContext } from "@/context/index/indexContext";
 import { Button } from "@nextui-org/react";
-import resolveCID from "@/utils/server/resolveCID";
+
 import wsGetAddress from "@/utils/server/ws/wsGetAddress";
 import openWebSocket from "@/utils/server/ws/wsOpen";
 
@@ -9,7 +9,14 @@ export default function SubmitButton() {
   const { input, addInfoData, setErrorMessage, setWebSocket, setFileInfo } =
     getContext();
 
+  const [buttonLoading, setButtonLoading] = useState(false);
+
+  function handleCancel() {
+    setButtonLoading(false);
+  }
+
   async function handleSubmit() {
+    setButtonLoading(true);
     addInfoData({ title: "Submitted", data: input });
     addInfoData("Getting WS Address...");
     const { address, error } = await wsGetAddress();
@@ -26,7 +33,7 @@ export default function SubmitButton() {
       return;
     }
     addInfoData("Socket created! Attempting to open... ");
-    //setWebSocket(socket);
+    setWebSocket(socket);
     socket.onopen = () => {
       addInfoData("WebSocket connection established. Sending data...");
       const requestData = {
@@ -37,12 +44,33 @@ export default function SubmitButton() {
       addInfoData("Data sent to WebSocket server.");
     };
     socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log("Received data:", data);
-      addInfoData(data);
-      setFileInfo(data);
+      let data = JSON.parse(event.data);
+
+      addInfoData(data.data);
+      if (data.type == "INFO") {
+        if (data.data.ok) {
+          setFileInfo(data.data);
+          setButtonLoading(false);
+        }
+      }
+    };
+
+    socket.onerror = (error) => {
+      addInfoData("Socket error...");
     };
   }
 
-  return <Button onPress={handleSubmit}>Submit</Button>;
+  return (
+    <>
+      <Button isLoading={buttonLoading} onPress={handleSubmit}>
+        Find
+      </Button>
+      <Button
+        className={`bg-red-500" ${buttonLoading ? "flex" : "hidden"} `}
+        onPress={handleCancel}
+      >
+        Cancel
+      </Button>
+    </>
+  );
 }
