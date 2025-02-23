@@ -4,6 +4,7 @@ import { Button } from "@nextui-org/react";
 
 import wsGetAddress from "@/utils/server/ws/wsGetAddress";
 import openWebSocket from "@/utils/server/ws/wsOpen";
+import WebSocket from "@/utils/server/ws/wSocket";
 
 export default function SubmitButton() {
   const { input, addInfoData, setErrorMessage, setWebSocket, setFileInfo } =
@@ -16,6 +17,8 @@ export default function SubmitButton() {
   }
 
   async function handleSubmit() {
+
+
     setButtonLoading(true);
     addInfoData({ title: "Submitted", data: input });
     addInfoData("Getting WS Address...");
@@ -27,14 +30,18 @@ export default function SubmitButton() {
     }
     addInfoData(`WS address received: ${address.address}:${address.port}`);
     addInfoData("Getting Socket...");
-    const socket = await openWebSocket({ address });
+    const socket = new WebSocket({address});
+    socket.connect();
+    
+    
     if (!socket) {
       addInfoData("Cant create Socket...");
       return;
     }
     addInfoData("Socket created! Attempting to open... ");
     setWebSocket(socket);
-    socket.onopen = () => {
+  
+  
       addInfoData("WebSocket connection established. Sending data...");
       const requestData = {
         type: "GET_CID_INFO",
@@ -42,22 +49,25 @@ export default function SubmitButton() {
       };
       socket.send(JSON.stringify(requestData));
       addInfoData("Data sent to WebSocket server.");
-    };
-    socket.onmessage = (event) => {
+ 
+   
+    socket.connection.onmessage = (event) => {
       let data = JSON.parse(event.data);
-
+      
       addInfoData(data.data);
       if (data.type == "INFO") {
         if (data.data.ok) {
           setFileInfo(data.data);
           setButtonLoading(false);
+         
         }
+        socket.close()
       }
+    
     };
 
-    socket.onerror = (error) => {
-      addInfoData("Socket error...");
-    };
+ 
+    
   }
 
   return (
