@@ -4,55 +4,48 @@ import React, { useContext } from "react";
 import FileData from "@/utils/class/fileData";
 import formatBytes from "@/utils/formatFileSize";
 import truncate from "@/utils/textTrunkate";
-import openWebSocket from "@/utils/server/ws/wsCreate"
-
+import openWebSocket from "@/utils/server/ws/wsCreate";
 
 const FileInfoDownload = ({ data }) => {
   const { fileInfo, webSocket } = getContext();
 
- 
+  let fileData = {};
+  if (fileInfo) {
+    fileData = new FileData(fileInfo);
 
-let fileData = {};
-  if(fileInfo){
-    
+    async function handleDownload() {
+      const socket = await openWebSocket();
+      socket.connect();
+      console.log("handle download");
+      socket.send(JSON.stringify({ type: "DOWNLOAD", data: fileData.cid }));
 
-     fileData = new FileData(fileInfo);
+      socket.connection.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log("Received data:", data);
+        // Handle the received data (e.g., save to file, display progress, etc.)
+      };
+    }
 
+    return (
+      <div
+        className={` "text-center justify-center   ${
+          fileInfo?.ok ? "block" : "hidden"
+        }`}
+      >
+        <h3 className="text-center">{fileData?.cid}</h3>
 
+        {fileData.links.map((file, i) => (
+          <h2 className="text-center" key={i}>
+            {truncate(file.Name)} {formatBytes(file.Tsize)}
+          </h2>
+        ))}
 
-  
-
-
-
-
-async  function handleDownload() {
-    const socket = await openWebSocket()
-   socket.connect()
-    console.log("handle download");
-    socket.send(JSON.stringify({ type:"DOWNLOAD", data: fileData.cid }));
-  }
-
-  return (
-    <div
-      className={` "text-center justify-center   ${
-        fileInfo?.ok ? "block" : "hidden"
-      }`}
-    >
-      <h3 className="text-center">{fileData?.cid}</h3>
-
-      {
-        fileData.links.map((file,i)=>(
-          <h2 className="text-center" key={i}>{truncate(file.Name)}  {formatBytes(file.Tsize)}</h2>
-        ))
-      }
-
-
-     <div className="flex justify-center mt-5">
-      <Button onPress={handleDownload}>Download</Button>
+        <div className="flex justify-center mt-5">
+          <Button onPress={handleDownload}>Download</Button>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 };
 
 export default FileInfoDownload;
