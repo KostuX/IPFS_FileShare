@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { getContext } from "@/context/index/indexContext";
 import { Button } from "@nextui-org/react";
-
 import wsGetAddress from "@/utils/server/ws/wsGetAddress";
-import openWebSocket from "@/utils/server/ws/wsOpen";
-import WebSocket from "@/utils/server/ws/wSocket";
+import openWebSocket from "@/utils/server/ws/wsCreate";
+
 
 export default function SubmitButton() {
   const { input, addInfoData, setErrorMessage, setWebSocket, setFileInfo } =
@@ -12,12 +11,15 @@ export default function SubmitButton() {
 
   const [buttonLoading, setButtonLoading] = useState(false);
 
+
+
   function handleCancel() {
     setButtonLoading(false);
   }
 
   async function handleSubmit() {
-
+    const socket = await openWebSocket()
+    
 
     setButtonLoading(true);
     addInfoData({ title: "Submitted", data: input });
@@ -30,7 +32,7 @@ export default function SubmitButton() {
     }
     addInfoData(`WS address received: ${address.address}:${address.port}`);
     addInfoData("Getting Socket...");
-    const socket = new WebSocket({address});
+    //const socket = new WebSocket({address});
     socket.connect();
     
     

@@ -1,5 +1,8 @@
+
+
 export default class WSocket {
     constructor({address}) {
+
        
         if (!WSocket.instance) {
             this.  url = `ws://${address.address}:${address.port}`;

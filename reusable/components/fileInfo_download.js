@@ -2,15 +2,34 @@ import { getContext } from "@/context/index/indexContext";
 import { Button } from "@nextui-org/button";
 import React, { useContext } from "react";
 import FileData from "@/utils/class/fileData";
+import formatBytes from "@/utils/formatFileSize";
+import truncate from "@/utils/textTrunkate";
+import openWebSocket from "@/utils/server/ws/wsCreate"
+
 
 const FileInfoDownload = ({ data }) => {
   const { fileInfo, webSocket } = getContext();
 
-  let fileData = new FileData(fileInfo);
+ 
 
-  function handleDownload() {
+let fileData = {};
+  if(fileInfo){
+    
+
+     fileData = new FileData(fileInfo);
+
+
+
+  
+
+
+
+
+async  function handleDownload() {
+    const socket = await openWebSocket()
+   socket.connect()
     console.log("handle download");
-    webSocket.send(JSON.stringify({ ok: true, data: "test data" }));
+    socket.send(JSON.stringify({ type:"DOWNLOAD", data: fileData.cid }));
   }
 
   return (
@@ -19,11 +38,21 @@ const FileInfoDownload = ({ data }) => {
         fileInfo?.ok ? "block" : "hidden"
       }`}
     >
-      <h3>{fileData?.cid}</h3>
-      <h3>{fileData?.totalSize}kb</h3>
+      <h3 className="text-center">{fileData?.cid}</h3>
+
+      {
+        fileData.links.map((file,i)=>(
+          <h2 className="text-center" key={i}>{truncate(file.Name)}  {formatBytes(file.Tsize)}</h2>
+        ))
+      }
+
+
+     <div className="flex justify-center mt-5">
       <Button onPress={handleDownload}>Download</Button>
+      </div>
     </div>
   );
+}
 };
 
 export default FileInfoDownload;

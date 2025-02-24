@@ -5,12 +5,13 @@ export default class FileData {
   uniqueBlocks = 0;
   ok = false;
   constructor(data) {
+    console.log(data?.data)
     if (data) {
       this.ok = true;
       this.cid = data?.cid;
-      this.ratio = data?.data?.Ratio;
-      this.totalSize = data?.data?.TotalSize;
-      this.uniqueBlocks = data?.data?.UniqueBlocks;
+      this.links = data?.data?.Links ;
+      this.size = data?.data?.Tsize;
+      this.hash = data?.data?.Hash
     }
   }
 }
