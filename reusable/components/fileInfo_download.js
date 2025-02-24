@@ -20,9 +20,17 @@ const FileInfoDownload = ({ data }) => {
       socket.send(JSON.stringify({ type: "DOWNLOAD", data: fileData.cid }));
 
       socket.connection.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        console.log("Received data:", data);
-        // Handle the received data (e.g., save to file, display progress, etc.)
+        const data = event.data;
+        const blob = new Blob([data], { type: 'application/octet-stream' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'downloaded_file';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        console.log('File downloaded');
       };
     }
 
