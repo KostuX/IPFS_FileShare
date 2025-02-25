@@ -3,8 +3,12 @@ import { PAGE_STATUS_NORMAL } from "@/reusable/variables/component";
 import updateInfo from "@/helper/updateInfo";
 const IndexContext = createContext();
 
+  // folder cid QmXENoYNCXeXaogL1mFt7M6w1SD7h7mzsSKVETp7etfqnL
+  // hello world Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z
+
+
 export function IndexProvider({ children }) {
-  const [input, setInput] = useState();
+  const [input, setInput] = useState("Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z");
   const [errorMessage, setErrorMessage] = useState({ ok: true, err: [] });
   const [pageStatus, setPageStatus] = useState(PAGE_STATUS_NORMAL);
   const [webSocket, setWebSocket] = useState(null);

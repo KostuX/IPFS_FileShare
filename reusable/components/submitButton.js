@@ -19,6 +19,8 @@ export default function SubmitButton() {
 
   async function handleSubmit() {
     const socket = await openWebSocket()
+
+ 
     
 
     setButtonLoading(true);
@@ -55,6 +57,7 @@ export default function SubmitButton() {
    
     socket.connection.onmessage = (event) => {
       let data = JSON.parse(event.data);
+      console.log(data.data)
       
       addInfoData(data.data);
       if (data.type == "INFO") {

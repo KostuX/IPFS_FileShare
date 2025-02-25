@@ -40,7 +40,7 @@ const FileInfoDownload = ({ data }) => {
           fileInfo?.ok ? "block" : "hidden"
         }`}
       >
-        <h3 className="text-center">{fileData?.cid}</h3>
+        <h3 className="text-center">{fileData?.cid} {formatBytes(fileData.totalSize)}</h3>
 
         {fileData.links.map((file, i) => (
           <h2 className="text-center" key={i}>
