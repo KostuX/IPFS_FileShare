@@ -8,6 +8,7 @@ import openWebSocket from "@/utils/server/ws/wsCreate";
 
 const FileInfoDownload = ({ data }) => {
   const { fileInfo, webSocket } = getContext();
+  console.log(fileInfo)
 
   let fileData = {};
   if (fileInfo) {
